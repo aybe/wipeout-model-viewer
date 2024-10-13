@@ -41,6 +41,18 @@ Wipeout.prototype.clear = function() {
 	
 	this.startTime = Date.now();
 	this.ticks = 0;
+
+	this.culling = THREE.FrontSide;
+};
+
+Wipeout.prototype.setCullingMode = function(side) {
+    this.scene.traverse(function(object) {
+        if (object.material) {
+			object.material.materials.forEach(element => {
+				element.side = side;
+			});
+        }
+    });
 };
 
 Wipeout.prototype.resize = function() {
