@@ -503,7 +503,7 @@ Wipeout.prototype.readObject = function(buffer, offset) {
 // ----------------------------------------------------------------------------
 // Create a ThreeJS Model from a single PRM 3D Object
 
-Wipeout.prototype.createModelFromObject = function(object, spriteCollection) {
+Wipeout.prototype.createModelFromObject = function(object, spriteCollection, isWipeout64Sky) {
 	var model = new THREE.Object3D();
 	var geometry = new THREE.Geometry();
 
@@ -559,7 +559,68 @@ Wipeout.prototype.createModelFromObject = function(object, spriteCollection) {
 				
 				var img = this.sceneMaterial.materials[materialIndex].map.image;
 				for( var j = 0; j < p.uv.length; j++ ) {
-					uv[j] = new THREE.Vector2(p.uv[j].u/img.width, 1-p.uv[j].v/img.height);
+					var uvs = p.uv;
+					if(isWipeout64Sky)
+					{
+						// BUG not working
+						function arraysEqual(arr1, arr2) {
+							if (arr1.length !== arr2.length) return false;
+							for (let i = 0; i < arr1.length; i++) {
+								if (arr1[i] !== arr2[i]) return false;
+							}
+							return true;
+						}
+						if (arraysEqual(p.indices, [7, 11, 16, 15])) {
+							uvs = [{u: 5, v: 3}, {u: 5, v: 121}, {u: 122, v: 3}, {u: 122, v: 121}];
+						} else if (arraysEqual(p.indices, [3, 7, 17, 16])) {
+							uvs = [{u: 5, v: 3}, {u: 5, v: 121}, {u: 122, v: 3}, {u: 122, v: 121}];
+						} else if (arraysEqual(p.indices, [8, 4, 14, 13])) {
+							uvs = [{u: 3, v: 3}, {u: 3, v: 121}, {u: 121, v: 3}, {u: 121, v: 121}];
+						} else if (arraysEqual(p.indices, [4, 0, 13, 12])) {
+							uvs = [{u: 5, v: 3}, {u: 5, v: 121}, {u: 122, v: 3}, {u: 122, v: 121}];
+						} else if (arraysEqual(p.indices, [16, 15, 22, 21])) {
+							uvs = [{u: 5, v: 4}, {u: 5, v: 121}, {u: 123, v: 4}, {u: 123, v: 121}];
+						} else if (arraysEqual(p.indices, [17, 16, 23, 22])) {
+							uvs = [{u: 5, v: 3}, {u: 5, v: 121}, {u: 122, v: 3}, {u: 122, v: 121}];
+						} else if (arraysEqual(p.indices, [30, 33, 31, 35])) {
+							uvs = [{u: 4, v: 4}, {u: 121, v: 4}, {u: 4, v: 122}, {u: 121, v: 122}];
+						} else if (arraysEqual(p.indices, [33, 32, 35, 34])) {
+							uvs = [{u: 2, v: 3}, {u: 119, v: 3}, {u: 2, v: 121}, {u: 119, v: 121}];
+						} else if (arraysEqual(p.indices, [32, 25, 34, 24])) {
+							uvs = [{u: 3, v: 4}, {u: 120, v: 4}, {u: 3, v: 122}, {u: 120, v: 122}];
+						} else if (arraysEqual(p.indices, [29, 28, 30, 33])) {
+							uvs = [{u: 3, v: 4}, {u: 120, v: 4}, {u: 3, v: 122}, {u: 120, v: 122}];
+						} else if (arraysEqual(p.indices, [28, 27, 33, 32])) {
+							uvs = [{u: 2, v: 4}, {u: 119, v: 4}, {u: 2, v: 121}, {u: 119, v: 121}];
+						} else if (arraysEqual(p.indices, [27, 26, 32, 25])) {
+							uvs = [{u: 3, v: 4}, {u: 120, v: 4}, {u: 3, v: 121}, {u: 120, v: 121}];
+						} else if (arraysEqual(p.indices, [7, 6, 11, 10])) {
+							uvs = [{u: 3, v: 4}, {u: 120, v: 4}, {u: 3, v: 122}, {u: 120, v: 122}];
+						} else if (arraysEqual(p.indices, [1, 0, 5, 4])) {
+							uvs = [{u: 3, v: 5}, {u: 121, v: 5}, {u: 3, v: 123}, {u: 121, v: 123}];
+						} else if (arraysEqual(p.indices, [2, 1, 6, 5])) {
+							uvs = [{u: 1, v: 4}, {u: 119, v: 4}, {u: 1, v: 122}, {u: 119, v: 122}];
+						} else if (arraysEqual(p.indices, [3, 2, 7, 6])) {
+							uvs = [{u: 1, v: 3}, {u: 119, v: 3}, {u: 1, v: 121}, {u: 119, v: 121}];
+						} else if (arraysEqual(p.indices, [23, 22, 31, 30])) {
+							uvs = [{u: 5, v: 4}, {u: 5, v: 122}, {u: 122, v: 4}, {u: 122, v: 122}];
+						} else if (arraysEqual(p.indices, [22, 21, 30, 29])) {
+							uvs = [{u: 5, v: 3}, {u: 5, v: 121}, {u: 122, v: 3}, {u: 122, v: 121}];
+						} else if (arraysEqual(p.indices, [14, 13, 20, 19])) {
+							uvs = [{u: 4, v: 3}, {u: 4, v: 120}, {u: 121, v: 3}, {u: 121, v: 120}];
+						} else if (arraysEqual(p.indices, [13, 12, 19, 18])) {
+							uvs = [{u: 5, v: 4}, {u: 5, v: 122}, {u: 122, v: 4}, {u: 122, v: 122}];
+						} else if (arraysEqual(p.indices, [6, 5, 10, 9])) {
+							uvs = [{u: 3, v: 4}, {u: 120, v: 4}, {u: 3, v: 122}, {u: 120, v: 122}];
+						} else if (arraysEqual(p.indices, [20, 19, 26, 25])) {
+							uvs = [{u: 4, v: 3}, {u: 4, v: 120}, {u: 121, v: 3}, {u: 121, v: 120}];
+						} else if (arraysEqual(p.indices, [19, 18, 25, 24])) {
+							uvs = [{u: 5, v: 4}, {u: 5, v: 122}, {u: 122, v: 4}, {u: 122, v: 122}];
+						} else if (arraysEqual(p.indices, [5, 4, 9, 8])) {
+							uvs = [{u: 3, v: 4}, {u: 120, v: 4}, {u: 3, v: 122}, {u: 120, v: 122}];
+						}
+					}
+					uv[j] = new THREE.Vector2(uvs[j].u/img.width, 1-uvs[j].v/img.height);
 				}
 			}
 
@@ -822,7 +883,7 @@ Wipeout.prototype.createScene = function(files, modify) {
 
 	var objects = this.readObjects(files.objects);
 	for( var i = 0; i < objects.length; i++ ) {
-		var model = this.createModelFromObject(objects[i], this.sprites);
+		var model = this.createModelFromObject(objects[i], this.sprites, modify && modify.isWipeout64Sky);
 		if( modify && modify.scale ) {
 			model.scale.set(modify.scale, modify.scale, modify.scale);
 		}
@@ -1061,7 +1122,7 @@ Wipeout.prototype.loadTrack = function( path, loadTEXFile, isWipeout64 ) {
 	this.loadBinaries({
 		textures: path+'/SKY.CMP',
 		objects: path+'/SKY.PRM'
-	}, function(files) { that.createScene(files, {scale:64}); });
+	}, function(files) { that.createScene(files, {scale:64, isWipeout64Sky: isWipeout64}); });
 
 
 	var trackFiles = {
