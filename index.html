@@ -68,6 +68,10 @@
 			select.addEventListener('change', function(ev){
 				var idx = ev.currentTarget.value;
 				loadingFunctions[idx](viewer);
+				// BUG not working, executed too early, there are no objects yet
+				var culling = document.getElementById('cullingSelect').value;
+				viewer.culling = parseInt(culling);
+				viewer.setCullingMode(viewer.culling);
 			}, true);
 
 			var addGroup = function(parent, name) {
